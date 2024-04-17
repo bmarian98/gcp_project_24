@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-application-prod
+  labels:
+    app: gcp
+    tier: backend-flask-prod
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gcp
+      tier: backend-flask-prod
+  template:
+    metadata:
+      labels:
+        app: gcp
+        tier: backend-flask-prod
+    spec:
+      containers:
+      - name: flask-container-prod
+        image: gcr.io/voltaic-circuit-420516/prod/gcp-flask-app:latest
+        ports:
+        - containerPort: 5000
+        env:
+          - name: PORT
+            value: "5000"
+          - name: FLASK_ENV
+            value: "prod"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-app-svc-prod
+  labels: 
+    app: gcp
+    tier: backend-flask-prod
+spec:
+  selector:
+    app: gcp
+    tier: backend-flask-prod
+  ports:
+  - port: 80
+    targetPort: 5000
+  type: "LoadBalancer"
