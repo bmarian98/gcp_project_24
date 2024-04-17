@@ -1,5 +1,8 @@
+# Define the build steps
 steps:
-- name: 'docker'
+- name: 'docker'  # Use pre-built Docker builder image (implicitly)
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/gcp-docker', '.']
-image:
-- 'gcr.io/$PROJECT_ID/gcp-docker'
+
+# Define substitutions (replace with your project and image details)
+substitutions:
+  $PROJECT_ID: voltaic-circuit-420516 
