@@ -1,0 +1,21 @@
+steps:
+# build Docker image
+- name: 'docker'
+  args: ['build', '-t', 'gcr.io/${PROJECT_ID}/${_BUILD_DEPLOY_NAME}/gcp-flask-app', '.']
+  dir: 'app'
+
+# push image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/${PROJECT_ID}/${_BUILD_DEPLOY_NAME}/gcp-flask-app']
+# deploy container image on GKE
+- name: 'gcr.io/cloud-builders/gke-deploy'
+  args:
+  - run
+  - --filename=kubernetes/flask-app-${_BUILD_DEPLOY_NAME}.yaml
+  - --image=gcr.io/${PROJECT_ID}/${_BUILD_DEPLOY_NAME}/gcp-flask-app
+  - --location=us-central1-c
+  - --cluster=cluster-1
+  - --namespace=${_BUILD_DEPLOY_NAME}
+
+substitutions:
+  _BUILD_DEPLOY_NAME: $(if [[ "${BRANCH_NAME}" != "main" ]]; then echo "${BRANCH_NAME}"; fi)
