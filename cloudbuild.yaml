@@ -1,7 +1,6 @@
 # Set BUILD_DEPLOY_NAME based on branch name (assuming branch name is passed as argument)
 
-RUN if [ "${TRIGGER_BRANCH}" == "main" ]; then echo "prod"; else echo "${TRIGGER_BRANCH}"; fi > _build_deploy_name.tmp
-ARG BUILD_DEPLOY_NAME <- _build_deploy_name.tmp
+ENV BUILD_DEPLOY_NAME=$(RUN if [ "${TRIGGER_BRANCH}" == "main" ]; then echo "prod"; else echo "${TRIGGER_BRANCH}"; fi)
 
 steps:
 # build Docker image
