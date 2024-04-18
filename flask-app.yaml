@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: flask-application
+  label: backend-flask
 spec:
   replicas: 2
   selector:
@@ -20,4 +21,16 @@ spec:
         env:
           - name: PORT
             value: "5000"
-
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-app-svc
+  label: backend-flask
+spec:
+  selector:
+    app: gcp
+  ports:
+  - port: 80
+    targetPort: 5000
+  type: "LoadBalancer"

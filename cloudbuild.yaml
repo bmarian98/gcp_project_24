@@ -9,7 +9,7 @@ steps:
 - name: 'gcr.io/cloud-builders/gke-deploy'
   args:
   - run
-  - --filename=deployment.yaml
+  - --filename=flask-app.yaml
   - --image=gcr.io/$PROJECT_ID/gcp-flask-app
   - --location=us-central1-c
   - --cluster=cluster-1
