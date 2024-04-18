@@ -2,7 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: flask-application
-  label: backend-flask
+  labels: 
+    tier: backend-flask
 spec:
   replicas: 2
   selector:
@@ -26,7 +27,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: flask-app-svc
-  label: backend-flask
+  labels: 
+    tier: backend-flask
 spec:
   selector:
     app: gcp
