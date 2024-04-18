@@ -1,16 +1,22 @@
+# Set BUILD_DEPLOY_NAME based on branch name (assuming branch name is passed as argument)
+
+RUN if [ "${TRIGGER_BRANCH}" == "main" ]; then echo "prod"; else echo "${TRIGGER_BRANCH}"; fi > _build_deploy_name.tmp
+ARG BUILD_DEPLOY_NAME <- _build_deploy_name.tmp
+
 steps:
 # build Docker image
 - name: 'docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/gcp-flask-app', '.']
+  args: ['build', '-t', 'gcr.io/${PROJECT_ID}/${BUILD_DEPLOY_NAME}/gcp-flask-app', '.']
+  working_dir: 'app'
 # push image
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/$PROJECT_ID/gcp-flask-app']
+  args: ['push', 'gcr.io/${PROJECT_ID}/${BUILD_DEPLOY_NAME}/gcp-flask-app']
 # deploy container image on GKE
 - name: 'gcr.io/cloud-builders/gke-deploy'
   args:
   - run
-  - --filename=flask-app.yaml
-  - --image=gcr.io/$PROJECT_ID/gcp-flask-app
+  - --filename=kubernetes/flask-app-${BUILD_DEPLOY_NAME}.yaml
+  - --image=gcr.io/${PROJECT_ID}/${BUILD_DEPLOY_NAME}/gcp-flask-app
   - --location=us-central1-c
   - --cluster=cluster-1
-  - --namespace=default
+  - --namespace=${BUILD_DEPLOY_NAME}
