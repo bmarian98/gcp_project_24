@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: flask-container-qa
-        image: gcr.io/voltaic-circuit-420516/qa/gcp-docker:latest
+        image: gcr.io/voltaic-circuit-420516/qa/gcp-flask-app:latest
         ports:
         - containerPort: 5000
         env:
