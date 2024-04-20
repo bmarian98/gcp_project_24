@@ -15,4 +15,3 @@ steps:
   - --location=us-central1-c
   - --cluster=cluster-1
   - --namespace=${_BUILD_DEPLOY_NAME}
-
